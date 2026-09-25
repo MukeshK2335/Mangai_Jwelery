@@ -1,4 +1,6 @@
 import "./About.css";
+import ABOUT_IMG from "../../../about-us.png";
+import SIGN_IMG from "../../../mangai-signature.png";
 
 const VALUES = [
   {
@@ -61,7 +63,7 @@ export default function About() {
                 <div className="about__frame-left" />
                 <div className="about__frame-right" />
                 <img
-                  src="../../about-us.png"
+                  src={ABOUT_IMG}
                   alt="Jewelry craftsmanship"
                   className="about__img"
                 />
@@ -107,7 +109,7 @@ export default function About() {
                 <div className="about__frame-left" />
                 <div className="about__frame-right" />
                 <img
-                  src="../../mangai-signature.png"
+                  src={SIGN_IMG}
                   alt="Mangai founder"
                   className="about__img"
                 />

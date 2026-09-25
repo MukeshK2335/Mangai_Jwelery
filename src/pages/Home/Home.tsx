@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import "./Home.css";
+import HERO_IMG from "../../../home-cover.jpeg";
 
 const TRUST_ITEMS = [
   {
@@ -16,8 +17,7 @@ const TRUST_ITEMS = [
   },
 ];
 
-const HERO_IMG =
-  "../../home-cover.jpeg";
+
 
 export default function Home() {
   return (

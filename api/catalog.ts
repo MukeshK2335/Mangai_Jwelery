@@ -3,18 +3,9 @@
  *
  *   GET /api/catalog
  *
- * What it does:
- *   1. Attaches META_CATALOG_TOKEN (a Meta Business System User Token)
- *      from SERVER env to Meta Graph API request.
- *   2. Asks Meta for ALL product-item fields from the catalog
- *      (retailer_id, name, image_url, price, inventory, sale_price, shipping, ...)
- *   3. Unwraps the `{ data: [...] }` wrapper and injects the Mangai custom
- *      custom columns (category_slug, featured, tags) from the
- *      `MANGAI_CUSTOM_COLUMNS` env map keyed by `retailer_id`
- *   4. Caches the result with SWR for 30 min + 24h stale for instant next hit.
- *
+ * Runs on Vercel EDGE RUNTIME (Web Fetch API style: Request -> Response).
  * NEVER expose META_CATALOG_TOKEN in the frontend bundle. This file runs only
- * on the SERVER (Vercel / Netlify / Node) only.
+ * on the SERVER (Vercel Edge) only.
  */
 
 type MangaiCustom = {
@@ -68,7 +59,7 @@ const FIELDS = [
   "review_status",
 ].join(",");
 
-export const config = { runtime: "nodejs" };
+export const config = { runtime: "edge" };
 
 export default async function handler(req: Request): Promise<Response> {
   const token = process.env.META_CATALOG_TOKEN;
@@ -92,6 +83,9 @@ export default async function handler(req: Request): Promise<Response> {
     customMap = {};
   }
 
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 15000);
+
   try {
     const metaUrl =
       `https://graph.facebook.com/${META_GRAPH_VERSION}/${catalogId}/products` +
@@ -102,9 +96,9 @@ export default async function handler(req: Request): Promise<Response> {
         Authorization: `Bearer ${token}`,
         Accept: "application/json",
       },
-      // Vercel Edge: do not cache for longer than graph respects freshness
-      // Meta products mutate often in manager in sync
+      signal: controller.signal,
     });
+    clearTimeout(timeoutId);
 
     const metaJson = (await metaRes.json()) as any;
 
@@ -139,20 +133,22 @@ export default async function handler(req: Request): Promise<Response> {
       }),
     });
   } catch (err: any) {
+    clearTimeout(timeoutId);
+    const isAbort = err?.name === "AbortError";
     return new Response(
-      JSON.stringify({ error: err?.message || String(err) || "Unknown proxy error" }),
+      JSON.stringify({
+        error: isAbort
+          ? "Request to Meta Graph API timed out after 15s."
+          : err?.message || String(err) || "Unknown proxy error",
+      }),
       {
-        status: 502,
+        status: isAbort ? 504 : 502,
         headers: corsHeaders({ "Content-Type": "application/json" }),
       },
     );
   }
 }
 
-/**
- * The Meta product_type / category string → Mangai category slug guess.
- * Used as fallback when a SKU isn't explicitly listed in MANGAI_CUSTOM_COLUMNS.
- */
 function fallbackCustom(metaProductTypeOrCategory: string): MangaiCustom {
   const s = String(metaProductTypeOrCategory || "").toLowerCase();
   let category_slug: MangaiCustom["category_slug"] = "necklaces";
@@ -163,12 +159,6 @@ function fallbackCustom(metaProductTypeOrCategory: string): MangaiCustom {
   return { category_slug, featured: false };
 }
 
-/**
- * CORS — browser direct hit from dev localhost:5173/5174 against the deployed /api/catalog
- * on a different port/origin. The dev path on same Vercel deploy (eploy will share
- * the same origin, but dev is different. Allow all since no secrets here the
- * returned list is public catalog data.
- */
 function corsHeaders(extras: Record<string, string> = {}): Record<string, string> {
   return {
     "Access-Control-Allow-Origin": "*",

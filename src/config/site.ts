@@ -38,9 +38,7 @@ function formatPriceLabel(amount: number | string, currency: string): string {
 }
 
 export function buildWhatsAppProductLink(product: Product): string {
-  const sku = product.retailer_id?.trim() ? product.retailer_id.trim() : product.id;
   const priceLabel = formatPriceLabel(product.price, product.currency);
-  const sizeHint = product.size ? `${product.size} (please confirm)` : "_________";
 
   const variantValue =
     product.variant &&

@@ -112,8 +112,9 @@ export default async function handler(req: Request): Promise<Response> {
       return new Response(JSON.stringify({ error: metaJson }), {
         status: metaRes.status,
         headers: corsHeaders({ "Content-Type": "application/json" }),
-      );
+      });
     }
+
     const list: any[] = Array.isArray(metaJson)
       ? metaJson
       : Array.isArray(metaJson.data)

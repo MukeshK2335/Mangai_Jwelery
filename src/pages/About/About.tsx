@@ -61,7 +61,7 @@ export default function About() {
                 <div className="about__frame-left" />
                 <div className="about__frame-right" />
                 <img
-                  src="https://coresg-normal.trae.ai/api/ide/v1/text_to_image?prompt=artisan%20hands%20crafting%20gold%20jewelry%20in%20workshop%20close%20up%20soft%20lighting%20moody%20dark%20background&image_size=portrait_4_3"
+                  src="../../about-us.png"
                   alt="Jewelry craftsmanship"
                   className="about__img"
                 />
@@ -107,7 +107,7 @@ export default function About() {
                 <div className="about__frame-left" />
                 <div className="about__frame-right" />
                 <img
-                  src="https://coresg-normal.trae.ai/api/ide/v1/text_to_image?prompt=portrait%20of%20elegant%20indian%20woman%20jewelry%20designer%20in%20studio%20warm%20moody%20lighting%20dark%20background%20editorial&image_size=portrait_4_3"
+                  src="../../mangai-signature.png"
                   alt="Mangai founder"
                   className="about__img"
                 />
@@ -117,10 +117,12 @@ export default function About() {
             <div className="about__founder-text">
               <span className="section-label">Founder's note</span>
               <blockquote className="about__quote">
-                "I started Mangai because I kept buying 'everyday gold jewelry' only to have it discolor
-                within a month. I wanted pieces I could forget about — the kind your grandmother would have
-                owned, minus the gold rate sticker shock. Every design we release is something I've tested
-                on myself for at least three months before it goes live. If it doesn't hold up, it doesn't ship."
+                "இருந்தாலும் மறைந்தாலும் பேர் சொல்ல வேண்டும்,
+இவர் போல யார் என்று ஊர் சொல்ல வேண்டும்..."
+Ever since I was a little girl, my Appa’s favorite lines echoed in my heart: to leave a mark, to stand on my own feet, and to build something the world remembers.
+ At 22, balancing my books and ambitions, Mangai Jewellery was born as my step toward financial independence.
+I couldn't have taken this leap alone. My parents gave me the freedom to dream, my little sister surrounds me with endless warmth and understanding, and my partner stands beside me as my greatest guide, mentor, and rock through every step of building this brand.
+Built on their belief, crafted with love for every Mangai. ✨"
               </blockquote>
               <p className="about__signature">— Mangai, founder</p>
             </div>

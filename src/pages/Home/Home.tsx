@@ -17,7 +17,7 @@ const TRUST_ITEMS = [
 ];
 
 const HERO_IMG =
-  "https://coresg-normal.trae.ai/api/ide/v1/text_to_image?prompt=elegant%20gold%20jewelry%20collection%20necklace%20ring%20earrings%20on%20dark%20velvet%20tray%20moody%20spotlight%20luxury%20photography&image_size=landscape_4_3";
+  "../../home-cover.jpeg";
 
 export default function Home() {
   return (
